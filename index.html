@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="description" content="Convert, resize and compress images directly in your browser.">
+
+	<title>Image Tools — image processing</title>
+
+	<link rel="stylesheet" href="./css/style.css">
+	<script src="./js/script.js" defer></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<header class="header">
+			<div class="container">
+				<a class="logo" href="./">Image <span>Tools</span></a>
+			</div>
+		</header>
+
+		<main class="main container">
+			<div class="main-header">
+				<p class="main-label">Simple tools for your images</p>
+				<h1>Convert, resize and compress images</h1>
+				<p>Prepare your images directly in your browser.</p>
+			</div>
+
+			<div class="content">
+				<div class="editor">
+					<section class="upload panel">
+						<h2 class="upload-header">1. Upload an image</h2>
+
+						<p class="upload-types">PNG, JPG, JPEG or WebP</p>
+
+						<div class="upload-section">
+							<label class="upload-label" for="imageInput">
+								Choose an image
+							</label>
+
+							<input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp">
+
+							<p class="upload-text" id="fileName">
+								No file selected
+							</p>
+						</div>
+					</section>
+
+					<section class="controls panel">
+						<h2 class="controls-header">2. Adjust image settings</h2>
+
+						<div class="controls-section">
+							<div class="controls-box">
+								<label for="formatSelect">Output format</label>
+
+								<select id="formatSelect" disabled>
+									<option value="image/jpeg">JPEG</option>
+									<option value="image/png">PNG</option>
+									<option value="image/webp">WebP</option>
+								</select>
+							</div>
+
+							<div class="controls-dimensions">
+								<div class="controls-box">
+									<label for="widthInput">Width, px</label>
+									<input disabled type="number" id="widthInput" min="1" step="1" placeholder="Width">
+								</div>
+
+								<div class="controls-box">
+									<label for="heightInput">Height, px</label>
+									<input disabled type="number" id="heightInput" min="1" step="1" placeholder="Height">
+								</div>
+							</div>
+
+							<label class="controls-checkbox" for="maintainAspectRatio">
+								<input disabled type="checkbox" id="maintainAspectRatio" checked>
+								<span>Keep aspect ratio</span>
+							</label>
+
+							<div class="controls-box" id="qualityField">
+								<label class="controls-quality" for="qualityRange">
+									Quality
+									<output id="qualityValue" for="qualityRange">85%</output>
+								</label>
+
+								<input disabled type="range" id="qualityRange" min="1" max="100" value="85">
+
+								<p class="controls-text">
+									Quality adjustment applies to JPEG and WebP.
+								</p>
+							</div>
+						</div>
+
+						<p class="controls-text">
+							JPEG replaces transparent areas with a white background.
+						</p>
+
+						<button class="button" id="processButton" type="button" disabled>
+							Process image
+						</button>
+					</section>
+				</div>
+
+				<section class="preview panel">
+					<h2 class="preview-header">3. Image preview</h2>
+
+					<div class="preview-panel">
+						<p class="preview-placeholder" id="previewPlaceholder">
+							Your image will appear here
+						</p>
+
+						<canvas id="imageCanvas" hidden role="img" aria-label="Image preview"></canvas>
+					</div>
+
+					<dl class="preview-statistics">
+						<div class="preview-original-weight">
+							<dt>Original file size</dt>
+							<dd id="originalWeight">—</dd>
+						</div>
+
+						<div class="preview-result-weight">
+							<dt>Result file size</dt>
+							<dd id="resultWeight">—</dd>
+						</div>
+
+						<div class="preview-size">
+							<dt>Result dimensions</dt>
+							<dd id="previewDimensions">—</dd>
+						</div>
+					</dl>
+
+					<div class="preview-actions">
+						<p class="preview-text" id="status" role="status">
+							Select an image to get started.
+						</p>
+
+						<button class="button" id="downloadButton" type="button" disabled>
+							Download image
+						</button>
+					</div>
+				</section>
+			</div>
+
+			<p class="privacy-note">
+				Your images stay on your device. No server upload required.
+			</p>
+		</main>
+
+		<footer class="footer">
+			<div class="container">
+				<p class="footer-text">© 2026 Image Tools</p>
+			</div>
+		</footer>
+	</div>
+</body>
+
+</html>
