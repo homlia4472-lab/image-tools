@@ -1,59 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<meta name="description" content="Convert, resize and compress images directly in your browser.">
+	<meta name="description" content="Bilder direkt im Browser konvertieren, skalieren und komprimieren.">
 
-	<title>Image Tools — image processing</title>
+	<title>Image Tools — Bildbearbeitung</title>
 
 	<link rel="stylesheet" href="./css/style.css">
-	<script src="./js/script.js" defer></script>
+	<script type="module" src="./js/script.js" defer></script>
 </head>
 
 <body>
 	<div class="wrapper">
 		<header class="header">
-			<div class="container">
-				<a class="logo" href="./">Image <span>Tools</span></a>
+			<div class="container header__inner">
+				<a class="logo" href="./index.html">Image <span>Tools</span></a>
+                <details class="language-switcher">
+                    <summary class="language-switcher__toggle" aria-label="Sprache auswählen">
+                        <span class="language-switcher__code">DE</span>
+                        <svg class="language-switcher__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <ul class="language-switcher__menu">
+						<li class="language-switcher__item"><a class="language-switcher__link" href="./index.html" lang="de" hreflang="de" aria-current="page">Deutsch</a></li>
+						<li class="language-switcher__item"><a class="language-switcher__link" href="./index-uk.html" lang="uk" hreflang="uk">Українська</a></li>
+						<li class="language-switcher__item"><a class="language-switcher__link" href="./index-en.html" lang="en" hreflang="en">English</a></li>
+                    </ul>
+                </details>
 			</div>
 		</header>
 
 		<main class="main container">
 			<div class="main-header">
-				<p class="main-label">Simple tools for your images</p>
-				<h1>Convert, resize and compress images</h1>
-				<p>Prepare your images directly in your browser.</p>
+				<p class="main-label">Einfache Werkzeuge für deine Bilder</p>
+				<h1>Bilder konvertieren, skalieren und komprimieren</h1>
+				<p>Bearbeite deine Bilder direkt im Browser.</p>
 			</div>
 
 			<div class="content">
 				<div class="editor">
 					<section class="upload panel">
-						<h2 class="upload-header">1. Upload an image</h2>
+						<h2 class="upload-header">1. Bild hochladen</h2>
 
-						<p class="upload-types">PNG, JPG, JPEG or WebP</p>
+						<p class="upload-types">PNG, JPG, JPEG oder WebP</p>
 
 						<div class="upload-section">
 							<label class="upload-label" for="imageInput">
-								Choose an image
+								Bild auswählen
 							</label>
 
 							<input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp">
 
 							<p class="upload-text" id="fileName">
-								No file selected
+								Keine Datei ausgewählt
 							</p>
 						</div>
 					</section>
 
 					<section class="controls panel">
-						<h2 class="controls-header">2. Adjust image settings</h2>
+						<h2 class="controls-header">2. Bildeinstellungen anpassen</h2>
 
 						<div class="controls-section">
 							<div class="controls-box">
-								<label for="formatSelect">Output format</label>
+								<label for="formatSelect">Ausgabeformat</label>
 
 								<select id="formatSelect" disabled>
 									<option value="image/jpeg">JPEG</option>
@@ -64,87 +77,87 @@
 
 							<div class="controls-dimensions">
 								<div class="controls-box">
-									<label for="widthInput">Width, px</label>
-									<input disabled type="number" id="widthInput" min="1" step="1" placeholder="Width">
+									<label for="widthInput">Breite, px</label>
+									<input disabled type="number" id="widthInput" min="1" step="1" placeholder="Breite">
 								</div>
 
 								<div class="controls-box">
-									<label for="heightInput">Height, px</label>
-									<input disabled type="number" id="heightInput" min="1" step="1" placeholder="Height">
+									<label for="heightInput">Höhe, px</label>
+									<input disabled type="number" id="heightInput" min="1" step="1" placeholder="Höhe">
 								</div>
 							</div>
 
 							<label class="controls-checkbox" for="maintainAspectRatio">
 								<input disabled type="checkbox" id="maintainAspectRatio" checked>
-								<span>Keep aspect ratio</span>
+								<span>Seitenverhältnis beibehalten</span>
 							</label>
 
 							<div class="controls-box" id="qualityField">
 								<label class="controls-quality" for="qualityRange">
-									Quality
+									Qualität
 									<output id="qualityValue" for="qualityRange">85%</output>
 								</label>
 
 								<input disabled type="range" id="qualityRange" min="1" max="100" value="85">
 
 								<p class="controls-text">
-									Quality adjustment applies to JPEG and WebP.
+									Die Qualitätseinstellung gilt für JPEG und WebP.
 								</p>
 							</div>
 						</div>
 
 						<p class="controls-text">
-							JPEG replaces transparent areas with a white background.
+							JPEG ersetzt transparente Bereiche durch einen weißen Hintergrund.
 						</p>
 
 						<button class="button" id="processButton" type="button" disabled>
-							Process image
+							Bild verarbeiten
 						</button>
 					</section>
 				</div>
 
 				<section class="preview panel">
-					<h2 class="preview-header">3. Image preview</h2>
+					<h2 class="preview-header">3. Bildvorschau</h2>
 
 					<div class="preview-panel">
 						<p class="preview-placeholder" id="previewPlaceholder">
-							Your image will appear here
+							Dein Bild erscheint hier
 						</p>
 
-						<canvas id="imageCanvas" hidden role="img" aria-label="Image preview"></canvas>
+						<canvas id="imageCanvas" hidden role="img" aria-label="Bildvorschau"></canvas>
 					</div>
 
 					<dl class="preview-statistics">
 						<div class="preview-original-weight">
-							<dt>Original file size</dt>
+							<dt>Ursprüngliche Dateigröße</dt>
 							<dd id="originalWeight">—</dd>
 						</div>
 
 						<div class="preview-result-weight">
-							<dt>Result file size</dt>
+							<dt>Dateigröße des Ergebnisses</dt>
 							<dd id="resultWeight">—</dd>
 						</div>
 
 						<div class="preview-size">
-							<dt>Result dimensions</dt>
+							<dt>Abmessungen des Ergebnisses</dt>
 							<dd id="previewDimensions">—</dd>
 						</div>
 					</dl>
 
 					<div class="preview-actions">
 						<p class="preview-text" id="status" role="status">
-							Select an image to get started.
+							Wähle ein Bild aus, um zu beginnen.
 						</p>
 
 						<button class="button" id="downloadButton" type="button" disabled>
-							Download image
+							Bild herunterladen
 						</button>
 					</div>
 				</section>
 			</div>
 
 			<p class="privacy-note">
-				Your images stay on your device. No server upload required.
+				Deine Bilder bleiben auf deinem Gerät. Ein Upload auf einen Server ist nicht erforderlich.
 			</p>
 		</main>
 

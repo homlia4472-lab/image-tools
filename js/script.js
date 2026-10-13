@@ -1,3 +1,10 @@
+import translations from "./translations.js";
+
+
+const language = document.documentElement.lang;
+const texts = translations[language] || translations.de;
+
+
 const byID = (id) => document.getElementById(id);
 const canvas = byID("imageCanvas");
 
@@ -5,6 +12,7 @@ const ctx = canvas.getContext("2d");
 let img = new Image();
 let ratio = 1;
 let originalSize = Number();
+let resultBlob = null;
 
 const styleAfterOnload = () => {
   previewPlaceholder.hidden = true;
@@ -15,15 +23,29 @@ const styleAfterOnload = () => {
   maintainAspectRatio.disabled = false;
   qualityRange.disabled = false;
   processButton.disabled = false;
-  byID("status").innerHTML = 'Select the settings and click "Process image".';
+  byID("status").innerHTML = texts.selectOptions; //1
   resultWeight.innerHTML = "—";
   previewDimensions.innerHTML = "—";
+  resultBlob = null;
+  downloadButton.disabled = true;
 };
 
 const styleSettingsСhanging = () => {
-  byID("status").innerHTML = 'Select the settings and click "Process image".';
+  byID("status").innerHTML = texts.selectOptions; //1
   resultWeight.innerHTML = "—";
   previewDimensions.innerHTML = "—";
+  resultBlob = null;
+  downloadButton.disabled = true;
+};
+
+const setProcessing = (isProcessing) => {
+  byID("imageInput").disabled = isProcessing;
+  formatSelect.disabled = isProcessing;
+  widthInput.disabled = isProcessing;
+  heightInput.disabled = isProcessing;
+  maintainAspectRatio.disabled = isProcessing;
+  qualityRange.disabled = isProcessing;
+  processButton.disabled = isProcessing;
 };
 
 const mahtSize = function (bits, a = 1) {
@@ -37,33 +59,36 @@ const mahtSize = function (bits, a = 1) {
   }
 };
 
-
-
 function weightDifference(size, a) {
   if (a === "original") {
     originalSize = size;
   } else {
     let difference = (100 - 100 * (+size / +originalSize)).toFixed(1);
     if (difference >= 0) {
-      byID("status").innerHTML = `Файл стал меньше на: ${difference} %`;
+      byID("status").innerHTML = texts.fileSizeReduced + difference + " %"; // 2
     } else {
-      byID("status").innerHTML = `Файл стал больше на: ${difference * -1} %`;
+      byID("status").innerHTML =
+        texts.fileSizeIncreased + difference * -1 + " %"; // 3
     }
   }
   a = null;
 }
 
 byID("imageInput").addEventListener("change", function (event) {
-  // получаем файл из input
+  // Получаю файл из input
   const file = event.target.files[0];
 
-  //   проверка на наличие файла
+  //   Проверка на наличие файла
   if (!file) return;
+  styleSettingsСhanging();
+  setProcessing(true);
+  byID("status").textContent = texts.imageLoading; //4
   originalWeight.innerHTML = mahtSize(file.size, "original");
-  //   создаем URL для изображения
+  //   Создаю URL для изображения
   const imgUrl = URL.createObjectURL(file);
 
   img.onload = function () {
+    setProcessing(false);
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
 
@@ -73,14 +98,27 @@ byID("imageInput").addEventListener("change", function (event) {
     widthInput.value = canvas.width;
     heightInput.value = canvas.height;
 
+    // Освобождаю адресс исходника
+    URL.revokeObjectURL(imgUrl);
     //   Стили после загрузки изображения
     styleAfterOnload();
+  };
+  img.onerror = function () {
+    setProcessing(false);
+    URL.revokeObjectURL(imgUrl);
+
+    styleSettingsСhanging();
+    processButton.disabled = true;
+    widthInput.disabled = true;
+    heightInput.disabled = true;
+    maintainAspectRatio.disabled = true;
+
+    byID("status").textContent = texts.imageLoadError; //5
   };
   img.src = imgUrl;
 });
 
-
-// события для форм
+// События для форм
 formatSelect.addEventListener("input", function () {
   styleSettingsСhanging();
   if (formatSelect.value === "image/png") {
@@ -97,11 +135,7 @@ qualityRange.addEventListener("input", function () {
   qualityValue.innerHTML = qualityRange.value;
 });
 
-formatSelect.addEventListener('input', function() {
-  styleSettingsСhanging();
-})
-
-// изменение размеров
+// Изменение размеров
 widthInput.addEventListener("input", function () {
   styleSettingsСhanging();
   const width = Number(widthInput.value);
@@ -128,7 +162,7 @@ heightInput.addEventListener("input", function () {
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 });
 
-// соотношение сторон
+// Соотношение сторон
 function aspectRatio(side, value) {
   if (side === "width") {
     const h = Math.max(1, Math.round(value / ratio));
@@ -143,27 +177,49 @@ function aspectRatio(side, value) {
   }
 }
 
-// обработчик фотографии
+// Обработчик фотографии
 processButton.addEventListener("click", async function () {
-  processButton.disabled = true;
-  const blob = await imgToBlob();
-  processButton.disabled = false;
+  setProcessing(true);
+  styleSettingsСhanging();
+  byID("status").textContent = texts.imageProcessing; // 6
 
-  resultWeight.innerHTML = mahtSize(blob.size);
-  previewDimensions.innerHTML = canvas.width + "px x " + canvas.height + "px";
+  try {
+    // Преобразование и показ результата
+    const blob = await imgToBlob();
 
-  // удаляю прошлою и добавляю измененную картинку в canvas
-  const resultUrl = URL.createObjectURL(blob);
-  const resultImg = new Image();
+    resultWeight.innerHTML = mahtSize(blob.size);
+    previewDimensions.innerHTML = canvas.width + "px x " + canvas.height + "px";
 
-  resultImg.onload = function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(resultImg, 0, 0);
+    // Удаляю прошлою и добавляю измененную картинку в canvas
+    const resultUrl = URL.createObjectURL(blob);
+    const resultImg = new Image();
 
-    URL.revokeObjectURL(resultUrl);
-  };
+    try {
+      await new Promise(function (resolve, reject) {
+        resultImg.onload = resolve;
 
-  resultImg.src = resultUrl;
+        resultImg.onerror = function () {
+          reject(new Error(texts.resultDisplayError)); // 7
+        };
+
+        resultImg.src = resultUrl;
+      });
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(resultImg, 0, 0);
+    } finally {
+      URL.revokeObjectURL(resultUrl);
+    }
+    resultBlob = blob;
+    downloadButton.disabled = false;
+  } catch (error) {
+    // Сообщение об ошибке
+    byID("status").textContent = texts.imageProcessingError; // 8
+
+    console.error(error);
+  } finally {
+    setProcessing(false);
+  }
 });
 
 // Преобразование в данные
@@ -178,7 +234,7 @@ function imgToBlob() {
     canvas.toBlob(
       function (blob) {
         if (!blob) {
-          reject(new Error("Не удалось создать изображение"));
+          reject(new Error(texts.imageCreationError)); // 9
           return;
         }
         resolve(blob);
@@ -187,7 +243,30 @@ function imgToBlob() {
       quality,
     );
   });
-};
+}
 
+downloadButton.addEventListener("click", function () {
+  if (!resultBlob) {
+    return;
+  }
 
+  const url = URL.createObjectURL(resultBlob);
+  const link = document.createElement("a");
 
+  const extensions = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+  };
+  const extension = extensions[resultBlob.type];
+
+  link.href = url;
+  link.download = `result.${extension}`;
+
+  link.click();
+
+  // Освобажаю временный адресс
+  setTimeout(function () {
+    URL.revokeObjectURL(url);
+  }, 1000);
+});

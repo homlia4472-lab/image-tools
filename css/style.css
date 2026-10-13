@@ -66,6 +66,113 @@ a {
   color: #335cff;
 }
 
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.language-switcher {
+  position: relative;
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: inherit;
+  font-family: inherit;
+  z-index: 20;
+}
+.language-switcher__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 78px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #1e293b;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  list-style: none;
+}
+.language-switcher__toggle::-webkit-details-marker {
+  display: none;
+}
+.language-switcher__toggle::marker {
+  content: "";
+}
+.language-switcher__toggle:hover {
+  background: #f1f5f9;
+}
+.language-switcher__toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+.language-switcher__code {
+  font-weight: 600;
+}
+.language-switcher__arrow {
+  display: block;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform 220ms ease;
+}
+.language-switcher[open] .language-switcher__arrow {
+  transform: rotate(180deg);
+}
+.language-switcher__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  box-sizing: border-box;
+  width: 172px;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+.language-switcher__item {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.language-switcher__link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #1e293b;
+  font-size: 14px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.language-switcher__link:hover, .language-switcher__link[aria-current=page] {
+  background: #f1f5f9;
+}
+.language-switcher__link[aria-current=page] {
+  font-weight: 600;
+}
+.language-switcher__link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .language-switcher__arrow {
+    transition: none;
+  }
+}
 .main {
   flex: 1;
 }
