@@ -44,7 +44,6 @@ function weightDifference(size, a) {
     originalSize = size;
   } else {
     let difference = (100 - 100 * (+size / +originalSize)).toFixed(1);
-    console.log(`d: ${difference}`);
     if (difference >= 0) {
       byID("status").innerHTML = `Файл стал меньше на: ${difference} %`;
     } else {
@@ -69,13 +68,11 @@ byID("imageInput").addEventListener("change", function (event) {
     canvas.height = img.naturalHeight;
 
     ratio = img.naturalWidth / img.naturalHeight;
-    console.log("Соотношение сторон:", ratio);
     ctx.drawImage(img, 0, 0);
 
     widthInput.value = canvas.width;
     heightInput.value = canvas.height;
 
-    console.log("Картинка нарисована", canvas.width, canvas.height);
     //   Стили после загрузки изображения
     styleAfterOnload();
   };
@@ -184,7 +181,6 @@ function imgToBlob() {
           reject(new Error("Не удалось создать изображение"));
           return;
         }
-        console.log("quality: " + quality);
         resolve(blob);
       },
       formatSelect.value,
